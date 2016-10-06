@@ -17,7 +17,20 @@ arm-none-eabi-objcopy -O binary output.elf output.bin
 echo \#Run Qemu:
 
 #This prints UART1 to the screen
-$QEMU/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin 
+#$QEMU/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin 
+
+#This prints UART4 to the screen, reset sent to /dev/null
+#../qemu/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin -chardev stdio,mux=on,id=terminal -serial /dev/null -serial chardev:terminal -serial /dev/null -serial chardev:terminal -monitor chardev:terminal
+
+#-chardev makes the device, -serial connects it
+#2 down
+#../qemu/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin -chardev stdio,mux=on,id=terminal -serial unix:///tmp/uart1,server -serial unix:///tmp/uart2,server -serial /dev/null -serial chardev:terminal -monitor chardev:terminal
+#3 down
+#../qemu/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin -chardev stdio,mux=on,id=terminal -serial unix:///tmp/uart1,server -serial unix:///tmp/uart2,server -serial unix:///tmp/uart3,server -serial chardev:terminal -monitor chardev:terminal
+#fail
+#../qemu/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin -chardev stdio,mux=on,id=terminal -serial unix:///tmp/uart1,server -serial unix:///tmp/uart2,server -serial unix:///tmp/uart3,server -serial unix:///tmp/uart4,server
+
+../qemu/arm-softmmu/qemu-system-arm -M netduino2 -nographic -kernel output.bin -serial unix:///tmp/uart1,server -serial unix:///tmp/uart2,server -serial unix:///tmp/uart3,server -serial unix:///tmp/uart4,server
 
 
 #this one sends UART1 to a socket but not UART2
